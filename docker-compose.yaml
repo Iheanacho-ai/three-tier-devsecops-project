@@ -1,0 +1,32 @@
+services:
+  frontend:
+    build: 
+      context: ../frontend/Dockerfile
+      dockerfile: Dockerfile
+      ports:
+        - "8080:8000"
+  
+  backend:
+    build: 
+      context: ../backend/Dockerfile
+      dockerfile: Dockerfile
+      environment:
+        MONGO_URI: mongodb://mongo:27017/quiz-app
+      ports: 
+        - "3000:3000"
+      depends_on: 
+        - MONGO_URI
+
+  mongo:
+    image: mongo:latest
+    container_name: quiz-mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=quiz-app
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodbdata:/data/db
+
+volumes:
+  mongodbdata:
+  
