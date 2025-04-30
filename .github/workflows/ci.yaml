@@ -168,7 +168,7 @@ jobs:
       contents: read
       security-events: write
       actions: read
-      id-token: write # Required for OIDC authentication with AWS
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -179,19 +179,22 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Set image tag
+        id: set_image_tag
+        run: echo "IMAGE_TAG=$(echo "$GITHUB_SHA" | head -c 8)" >> $GITHUB_OUTPUT
 
       - name: Build and push frontend Docker image to ECR
         working-directory: ./frontend
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          IMAGE_TAG=$(echo "$GITHUB_SHA" | head -c 8)
+          IMAGE_TAG=${{ steps.set_image_tag.outputs.IMAGE_TAG }}
           docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${IMAGE_TAG} .
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${IMAGE_TAG}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:$(echo \"$GITHUB_SHA\" | head -c 8)"
+          image-ref: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${{ steps.set_image_tag.outputs.IMAGE_TAG }}"
           format: "sarif"
           output: "trivy-results.sarif"
           severity: "CRITICAL,HIGH"
@@ -205,13 +208,13 @@ jobs:
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
       - name: Snyk Container monitor
-        run: snyk container monitor ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:$(echo \"$GITHUB_SHA\" | head -c 8) --file=Dockerfile
+        run: snyk container monitor ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${{ steps.set_image_tag.outputs.IMAGE_TAG }} --file=Dockerfile
         working-directory: ./frontend
 
       - name: Run Snyk to check for vulnerabilities in the Docker image
         uses: snyk/actions/docker@master
         with:
-          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:$(echo \"$GITHUB_SHA\" | head -c 8)
+          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${{ steps.set_image_tag.outputs.IMAGE_TAG }}
           args: --file=frontend/Dockerfile --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -224,7 +227,7 @@ jobs:
       contents: read
       security-events: write
       actions: read
-      id-token: write # Required for OIDC authentication with AWS
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -235,19 +238,22 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Set image tag
+        id: set_image_tag
+        run: echo "IMAGE_TAG=$(echo "$GITHUB_SHA" | head -c 8)" >> $GITHUB_OUTPUT
 
       - name: Build and push backend Docker image to ECR
         working-directory: ./backend
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          IMAGE_TAG=$(echo "$GITHUB_SHA" | head -c 8)
+          IMAGE_TAG=${{ steps.set_image_tag.outputs.IMAGE_TAG }}
           docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:${IMAGE_TAG} .
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:${IMAGE_TAG}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:$(echo \"$GITHUB_SHA\" | head -c 8)"
+          image-ref: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:${{ steps.set_image_tag.outputs.IMAGE_TAG }}"
           format: "sarif"
           output: "trivy-results.sarif"
           severity: "CRITICAL,HIGH"
@@ -261,13 +267,13 @@ jobs:
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
       - name: Snyk Container monitor
-        run: snyk container monitor ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:$(echo \"$GITHUB_SHA\" | head -c 8) --file=Dockerfile
+        run: snyk container monitor ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:${{ steps.set_image_tag.outputs.IMAGE_TAG }} --file=Dockerfile
         working-directory: ./backend
 
       - name: Run Snyk to check for vulnerabilities in the Docker image
         uses: snyk/actions/docker@master
         with:
-          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:$(echo \"$GITHUB_SHA\" | head -c 8)
+          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:${{ steps.set_image_tag.outputs.IMAGE_TAG }}
           args: --file=backend/Dockerfile --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
