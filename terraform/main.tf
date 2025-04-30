@@ -118,6 +118,8 @@ resource "aws_iam_role" "jumphost_role" {
   }
 }
 
+# This is an AWS IAM policy
+
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attach" {
   role       = aws_iam_role.jumphost_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
