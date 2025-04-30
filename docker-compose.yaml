@@ -3,19 +3,19 @@ services:
     build: 
       context: ./frontend
       dockerfile: Dockerfile
-      ports:
-        - "8080:8000"
+    ports:
+      - "8080:8000"
   
   backend:
     build: 
       context: ./backend
       dockerfile: Dockerfile
-      environment:
-        MONGO_URI: mongodb://mongo:27017/quiz-app
-      ports: 
-        - "3000:3000"
-      depends_on: 
-        - quiz-mongodb
+    environment:
+      MONGO_URI: mongodb://mongo:27017/quiz-app
+    ports: 
+      - "3000:3000"
+    depends_on: 
+      - mongo
 
   mongo:
     image: mongo:latest
@@ -29,4 +29,3 @@ services:
 
 volumes:
   mongodbdata:
-  

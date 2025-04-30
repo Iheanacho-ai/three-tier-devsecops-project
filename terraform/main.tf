@@ -13,6 +13,7 @@ terraform {
   }
 }
 
+# This is the AWS provider
 provider "aws" {
   region = var.region
 }
