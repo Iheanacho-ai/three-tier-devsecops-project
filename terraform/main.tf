@@ -120,14 +120,10 @@ resource "aws_iam_role" "jumphost_role" {
 
 # This is an AWS IAM policy
 
-resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attach" {
-  role       = aws_iam_role.jumphost_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-}
-
-resource "aws_iam_role_policy_attachment" "ssm_policy_attach" {
-  role       = aws_iam_role.jumphost_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+resource "aws_iam_role_policy_attachment" "iam-policy" {
+  role = aws_iam_role.jumphost_role
+  # Just for testing purpose
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
 resource "aws_iam_instance_profile" "jumphost_instance_profile" {
