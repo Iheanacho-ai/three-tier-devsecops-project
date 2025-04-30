@@ -120,9 +120,8 @@ resource "aws_iam_role" "jumphost_role" {
 
 # This is an AWS IAM policy
 
-resource "aws_iam_role_policy_attachment" "iam-policy" {
-  role = aws_iam_role.jumphost_role
-  # Just for testing purpose
+resource "aws_iam_role_policy_attachment" "administrator_access_attach" {
+  role       = aws_iam_role.jumphost_role.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
