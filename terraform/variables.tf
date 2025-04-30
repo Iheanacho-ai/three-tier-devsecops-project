@@ -15,7 +15,7 @@ variable "ami_name_filter" {
 }
 
 variable "allowed_ssh_cidr" {
-  default = "197.210.29.237/32"
+  default = "0.0.0.0/0"
 }
 
 variable "key_name" {
