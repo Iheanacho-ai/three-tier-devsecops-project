@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: backend-quiz-app
+  labels:
+    app: backend-quiz-app
+
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-quiz-app
+  template:
+    metadata: 
+      labels:
+        app: backend-quiz-app
+    
+    spec:
+      containers:
+      - name: backend-quiz-app
+        image: 
+        ports: 
+        - containerPort: 3000
+        env:
+        - name: 
+          valueFrom:
+            configMapKeyRef:
+              name: backend-configmap
+              key: MONGO_URI
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-quiz-app
+spec:
+  selector:
+    app: backend-quiz-app
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      
