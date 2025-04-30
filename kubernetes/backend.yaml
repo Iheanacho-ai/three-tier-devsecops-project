@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: backend-quiz-app
-        image: 
+        image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest
         ports: 
         - containerPort: 3000
         env:
@@ -39,5 +39,5 @@ spec:
   ports:
     - protocol: TCP
       port: 3000
-      targetPort: 3000
+  type: ClusterIP
       

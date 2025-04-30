@@ -17,9 +17,12 @@ spec:
     spec:
       containers:
       - name: frontend-quiz-app
-        image: 
-        ports: 
-        - containerPort: 8000 
+        image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+        env:
+        - name: VITE_REACT_APP_API_URL
+          value: "http://backend-quiz-app:3000/api/questions"
+        ports:
+        - containerPort: 8080
 
 ---
 apiVersion: v1
