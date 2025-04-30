@@ -38,6 +38,8 @@ jobs:
       run:
         working-directory: ./frontend
     steps: 
+      - uses: actions/checkout@v4
+      
       - name: Install dependencies and run tests
         run: |
           npm install
@@ -76,6 +78,8 @@ jobs:
       run:
         working-directory: ./backend
     steps: 
+      - uses: actions/checkout@v4
+
       - name: Install dependencies and run tests
         run: |
           npm install
