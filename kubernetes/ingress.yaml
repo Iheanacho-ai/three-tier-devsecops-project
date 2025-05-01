@@ -10,20 +10,19 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: quizapp.kalio.site
-      http:
+    - http:
         paths:
           - path: /api/questions
             pathType: Prefix
             backend:
               service:
-                name: backend-service
+                name: backend-quiz-app
                 port:   
                   number: 3000
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend-service
+                name: frontend-quiz-app
                 port: 
                   number: 8080
