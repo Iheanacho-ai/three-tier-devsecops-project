@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: backend-quiz-app
-        image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest
+        image: 035093205970.dkr.ecr.us-east-1.amazonaws.com/backend:latest
         ports: 
         - containerPort: 3000
         env:
