@@ -3,4 +3,5 @@ kind: ConfigMap
 metadata:
   name: backend-configmap
 data:
-  MONGO_URI: "mongodb://todo-mongodb-service:27017/quiz_app"
+  MONGO_URI: "mongodb+srv://amara:amaradevsecops123@cluster0.pvb22mq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+

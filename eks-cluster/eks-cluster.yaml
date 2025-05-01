@@ -11,10 +11,10 @@ metadata:
 
 nodeGroups:
   - name: app-nodegroup
-    instanceType: t2.micro
-    desiredCapacity: 2
-    minSize: 2
-    maxSize: 2
+    instanceType: t3.medium
+    desiredCapacity: 3
+    minSize: 3
+    maxSize: 3
     privateNetworking: true
     iam:
       withAddonPolicies:
